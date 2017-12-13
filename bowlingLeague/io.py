@@ -3,6 +3,7 @@ import glob
 
 
 def getLeagueNames():
-    files = glob.glob('./data/leagues/*.csv')
-    names = [i.split('/')[-1].split('.csv') for i in files]
+    files = glob.glob('./data/leagues/*.json')
+    names = [i.replace('\\', '/').split('/')[-1].split('.json')[0]
+             for i in files]
     return names

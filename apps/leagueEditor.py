@@ -11,6 +11,9 @@ leagues = io.getLeagueNames()
 
 
 layout = html.Div([
+    dcc.Link('Home', href='/'),
+    dcc.Dropdown(options=[{'label': i, 'value': i}
+                          for i in leagues], id='editorLeagueDropDown'),
     dt.DataTable(rows=[],
                  columns=['Id', 'Name'],
                  row_selectable=True,
@@ -20,27 +23,40 @@ layout = html.Div([
     dcc.Input(placeholder='League Name..', id='newLeagueName'),
     dcc.Input(placeholder='Player Name..', id='newLeaguePlayerName'),
     html.Button('Add Player', id='addPlayerButton'),
-    html.Button('Save League', id='saveLeagueButton'),
-    html.Div(id='newLeagueStatus')
 ])
 
 
+@app.callback(Output('newLeaguePlayerName', 'value'),
+              [Input('editorLeagueDropDown', 'value')])
+def clearName(value):
+    print('None')
+    return ''
+
+
 @app.callback(Output('newLeagueTable', 'rows'),
-              [Input('addPlayerButton', 'n_clicks')],
+              [Input('addPlayerButton', 'n_clicks'),
+               Input('editorLeagueDropDown', 'value')],
               state=[State('newLeaguePlayerName', 'value'),
-                     State('newLeagueTable', 'rows'),
                      State('newLeagueTable', 'selected_row_indices')])
-def addPlayer(n_clicks, name, table, selected):
+def addPlayer(n_clicks, league, name, selected):
+    filename = 'data/leagues/{0}.json'.format(league)
+    print(name)
+    try:
+        table = json.load(open(filename))
+    except:
+        table = []
     if name is None:
         name = ''
     if name == '' and len(selected) == 0:
         return table
     elif name == '' and len(selected) > 0:
         for s in selected:
-            table.pop(s)
+            table.pop(s - 1)
     elif name != '':
         row = {'Name': name, 'Id': len(table)}
         table.append(row)
+    with open(filename, 'w+') as newLeaguefile:
+        json.dump(table, newLeaguefile)
     print(table)
     return table
 
