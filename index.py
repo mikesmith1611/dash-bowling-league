@@ -4,7 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_table_experiments as dt
 from app import app
-from apps import newLeague
+from apps import leagueEditor
 
 
 app.layout = html.Div([
@@ -14,7 +14,7 @@ app.layout = html.Div([
 ])
 
 layout = html.Div([
-    dcc.Link('Create New League', href='/newLeague')
+    dcc.Link('Create New League', href='/leagueEditor')
 ])
 
 
@@ -24,8 +24,8 @@ def display_page(pathname):
     print(pathname)
     if pathname == '/':
         return layout
-    elif pathname == '/newLeague':
-        return newLeague.layout
+    elif pathname == '/leagueEditor':
+        return leagueEditor.layout
 
 
 if __name__ == "__main__":
