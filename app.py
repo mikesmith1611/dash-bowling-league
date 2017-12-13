@@ -5,11 +5,3 @@ import dash_table_experiments as dt
 
 app = dash.Dash()
 app.config.suppress_callback_exceptions = True
-
-
-def create_league():
-    league = html.Div([
-        table=dt.DataTable(rows=[{}]),
-    ])
-
-    return league
